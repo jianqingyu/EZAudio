@@ -200,15 +200,6 @@ OSStatus EZAudioFloatConverterCallback(AudioConverterRef             inAudioConv
                         toFloatBuffers:(float **)buffers
                     packetDescriptions:(AudioStreamPacketDescription *)packetDescriptions
 {
-    OSStatus status = AudioConverterFillComplexBuffer(self.info->converterRef,
-                                                  EZAudioFloatConverterCallback,
-                                                  audioBufferList,
-                                                  &frames,
-                                                  self.info->floatAudioBufferList,
-                                                  packetDescriptions ? packetDescriptions : self.info->packetDescriptions);
-    if (status > 0 ) {
-        AudioConverterReset(self.info->converterRef);
-    }
     if (frames != 0)
     {
         //
@@ -239,6 +230,15 @@ OSStatus EZAudioFloatConverterCallback(AudioConverterRef             inAudioConv
                    self.info->floatAudioBufferList->mBuffers[i].mData,
                    self.info->floatAudioBufferList->mBuffers[i].mDataByteSize);
         }
+    }
+    OSStatus status = AudioConverterFillComplexBuffer(self.info->converterRef,
+                              EZAudioFloatConverterCallback,
+                              audioBufferList,
+                              &frames,
+                              self.info->floatAudioBufferList,
+                              packetDescriptions ? packetDescriptions : self.info->packetDescriptions);
+    if (status > 0 ) {
+        AudioConverterReset(self.info->converterRef);
     }
 }
 
